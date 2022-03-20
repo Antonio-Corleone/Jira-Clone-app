@@ -5,7 +5,7 @@ import { withFormik } from 'formik'
 import * as Yup from 'yup';
 import { connect } from 'react-redux'
 
-import { actionLogin } from '../../redux/actions/actUserLogin';
+import { actionLogin } from '../redux/actions/actUserLogin';
 
 function LoginForm(props) {
   // console.log(props);

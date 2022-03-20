@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Layout } from 'antd'
 
-import LoginComponent from './LoginForm';
+import LoginComponent from '../../pages/LoginForm';
 
 const { Header, Footer, Sider, Content } = Layout;
 
