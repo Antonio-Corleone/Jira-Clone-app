@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { connect, useSelector, useDispatch } from 'react-redux'
 
 import { actGetProjectCategorySaga } from '../redux/actions/actGetProjectCategory'
+import { actCreateProject } from '../redux/actions/actCreateProject'
 function CreateProject(props) {
   const arrProjectCategory = useSelector(state => state.createProjectReducer.arrProjectCategory);
   const dispatch = useDispatch();
@@ -14,17 +15,21 @@ function CreateProject(props) {
     handleChange,
     handleBlur,
     handleSubmit,
+    setFieldValue,
   } = props;
   const handleEditorChange = (content, editor) => {
-    console.log(content);
+    setFieldValue('description', content)
   }
   useEffect(() => {
     dispatch(actGetProjectCategorySaga())
+    return ()=>{
+      
+    }
   }, [])
   return (
     <div className="container m-5">
       <h3>Create Project</h3>
-      <form className="container" onSubmit={handleSubmit}>
+      <form className="container" onSubmit={handleSubmit} onChange={handleChange}>
 
         <div className="form-group">
           <label htmlFor="projectName">Project name</label>
@@ -53,7 +58,7 @@ function CreateProject(props) {
         </div>
 
         <div className="form-group">
-          <select className="form-control mt-3" name="categoryId">
+          <select className="form-control mt-3" name="categoryId" onChange={handleChange}>
             {arrProjectCategory?.map((pro, index) => {
               return (
                 <option key={index} value={pro.id}>{pro.projectCategoryName}</option>
@@ -69,15 +74,24 @@ function CreateProject(props) {
   )
 }
 const CreateProjectFormik = withFormik({
-  mapPropsToValues: () => ({
-  }),
+  enableReinitialize: true,
+  mapPropsToValues: (props) => {
+    return {
+      projectName: '',
+      description: '',
+      categoryId: props.arrProjectCategory[0]?.id,
+    }
+  },
   validationSchema: Yup.object().shape({
 
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
-
+    console.log('props', props);
+    props.dispatch(actCreateProject(values))
   },
 
   displayName: 'CreateProjectFormik',
 })(CreateProject);
-export default connect()(CreateProjectFormik);
+
+const mapStateToProps = (state) => ({ arrProjectCategory: state.createProjectReducer.arrProjectCategory })
+export default connect(mapStateToProps)(CreateProjectFormik);

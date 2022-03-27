@@ -5,5 +5,8 @@ export const jiraService = {
     .post('/Users/signin', userLogin),
 
   getAllProjectCategory: () => api
-    .get('ProjectCategory')
+    .get('ProjectCategory'),
+
+  createProject: (project)=> api
+    .post('Project/createProjectAuthorize',project)
 }
