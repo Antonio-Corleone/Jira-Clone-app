@@ -14,6 +14,11 @@ const routesHome = [
     path: "/create-project",
     component: lazy(() => import("../pages/CreateProject")),
   },
+  {
+    exact: true,
+    path: "/project-management",
+    component: lazy(() => import("../pages/ProjectManagement")),
+  },
 ];
 
 const renderRoutesHome = () => {

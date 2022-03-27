@@ -19,6 +19,10 @@ export default function Menu() {
           <NavLink exact to="/home" activeClassName="active">Cyber Board</NavLink>
         </div>
         <div>
+          <i className="fa fa-credit-card mr-1" />
+          <NavLink exact to="/project-management" activeClassName="active">Project Management</NavLink>
+        </div>
+        <div>
           <i className="fa fa-cog mr-1" />
           <NavLink to="/create-project" activeClassName="active">Create Project</NavLink>
         </div>
