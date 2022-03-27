@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { NavLink } from 'react-router-dom'
 
 export default function Menu() {
   return (
@@ -14,33 +15,33 @@ export default function Menu() {
       </div>
       <div className="control">
         <div>
-          <i className="fa fa-credit-card" />
-          <span>Cyber Board</span>
+          <i className="fa fa-credit-card mr-1" />
+          <NavLink exact to="/home" activeClassName="active">Cyber Board</NavLink>
         </div>
         <div>
-          <i className="fa fa-cog" />
-          <span>Project Settings</span>
+          <i className="fa fa-cog mr-1" />
+          <NavLink to="/create-project" activeClassName="active">Create Project</NavLink>
         </div>
       </div>
       <div className="feature">
         <div>
-          <i className="fa fa-truck" />
+          <i className="fa fa-truck mr-1" />
           <span>Releases</span>
         </div>
         <div>
-          <i className="fa fa-equals" />
-          <span>Issues and filters</span>
+          <i className="fa fa-filter mr-1" aria-hidden="true"></i>
+          <span> Issues and filters</span>
         </div>
         <div>
-          <i className="fa fa-paste" />
+          <i className="fa fa-paste mr-1" />
           <span>Pages</span>
         </div>
         <div>
-          <i className="fa fa-location-arrow" />
-          <span>Reports</span>
+          <i className="fa fa-location-arrow mr-1" />
+          <span> Reports</span>
         </div>
         <div>
-          <i className="fa fa-box" />
+        <i className="fa fa-archive mr-1" aria-hidden="true"></i>
           <span>Components</span>
         </div>
       </div>

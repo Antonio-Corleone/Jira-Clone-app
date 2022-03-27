@@ -163,7 +163,12 @@ code {
 .menu .control div:focus {
   color: royalblue;
 }
-
+.menu .control  a{
+  color: black;
+}
+.menu .control a.active{
+  color: royalblue;
+}
 .menu .feature {
   padding: 0% 10%;
   text-align: left;

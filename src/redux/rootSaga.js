@@ -1,9 +1,11 @@
 import { all } from 'redux-saga/effects';
-import * as actSaga from './actionSaga/UserLogin'
+import * as actLogin from './actionSaga/UserLogin';
+import * as actGetProject from './actionSaga/GetProjectCategory'
 
 function* rootSaga() {
   yield all([
-    actSaga.signInRequest()
+    actLogin.signInRequest(),
+    actGetProject.projectCategoryRequest(),
   ])
 }
 export default rootSaga;
