@@ -1,34 +1,24 @@
-import React, { useState } from 'react'
-import { Table, Button, Space } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Table, Button, Space, Tag } from 'antd';
+import parse from 'html-react-parser';
+import {
+  EditOutlined,
+  DeleteOutlined
+} from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import {actGetListProjectSaga} from '../redux/actions/actGetListProject'
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
 
-export default function ProjectManagement() {
+export default function ProjectManagement(props) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actGetListProjectSaga())
+  }, [])
+  const projectList = useSelector(state => state.projectManagementReducer.projectList)
+    .map(project => {
+      return {...project, key: project.id}
+    })
+
   const [state, setState] = useState({
     filteredInfo: null,
     sortedInfo: null,
@@ -65,40 +55,54 @@ export default function ProjectManagement() {
   filteredInfo = filteredInfo || {};
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      filters: [
-        { text: 'Joe', value: 'Joe' },
-        { text: 'Jim', value: 'Jim' },
-      ],
-      filteredValue: filteredInfo.name || null,
-      onFilter: (value, record) => record.name.includes(value),
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      ellipsis: true,
+      title: 'projectName',
+      dataIndex: 'projectName',
+      key: 'projectName',
+    },
+    // {
+    //   title: 'Description',
+    //   dataIndex: 'description',
+    //   key: 'description',
+    //   render: (text, record, index) => {
+    //     let reactNode = parse(text)
+    //     let htmlContent = reactNode.props?.children
+    //     return (
+    //       <>
+    //         {htmlContent ? htmlContent : ''}
+    //       </>
+    //     )
+    //   }
+    // },
+    {
+      title: 'Category Name',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      sorter: (a, b) => a.age - b.age,
-      sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
-      ellipsis: true,
+      title: 'Creator',
+      dataIndex: 'creator',
+      key: 'creator',
+      render: (text, record, index) => {
+        console.log(text);
+        return (
+          <><Tag color="green">{text.name}</Tag></>
+        )
+      }
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      filters: [
-        { text: 'London', value: 'London' },
-        { text: 'New York', value: 'New York' },
-      ],
-      filteredValue: filteredInfo.address || null,
-      onFilter: (value, record) => record.address.includes(value),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-      ellipsis: true,
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <div className="text-center text-light" style={{ display: 'inline-block', backgroundColor: '#40a9ff', width: '30px', height: '35px', borderRadius: '3px' }}>
+            <a><EditOutlined style={{ marginTop: '10px' }} /></a>
+          </div>
+          <div className="text-center text-light" style={{ display: 'inline-block', backgroundColor: '#f5222d', width: '30px', height: '35px', borderRadius: '3px' }}>
+            <a><DeleteOutlined style={{ marginTop: '10px' }} /></a>
+          </div>
+
+        </Space>
+      ),
     },
   ];
   return (
@@ -109,7 +113,7 @@ export default function ProjectManagement() {
         <Button onClick={clearFilters}>Clear filters</Button>
         <Button onClick={clearAll}>Clear filters and sorters</Button>
       </Space>
-      <Table columns={columns} dataSource={data} onChange={handleChange} />
+      <Table columns={columns} dataSource={projectList} onChange={handleChange} />
     </div>
   )
 }

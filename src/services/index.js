@@ -8,5 +8,8 @@ export const jiraService = {
     .get('ProjectCategory'),
 
   createProject: (project)=> api
-    .post('Project/createProjectAuthorize',project)
+    .post('Project/createProjectAuthorize',project),
+  
+  getListProject: () => api
+    .get('Project/getAllProject'),
 }
