@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Space, Tag } from 'antd';
-import parse from 'html-react-parser';
 import {
   EditOutlined,
   DeleteOutlined
 } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { actGetListProjectSaga } from '../redux/actions/actGetListProject'
-
+import { actOpenEditModal } from '../redux/actions/actModalPopUp';
+import FormEditProject from '../components/Forms/FormEditProject';
 
 export default function ProjectManagement(props) {
   const dispatch = useDispatch();
@@ -70,7 +70,7 @@ export default function ProjectManagement(props) {
       sorter: ((item2, item1) => {
         let projectName1 = item1?.projectName.trim().toLowerCase();
         let projectName2 = item2?.projectName.trim().toLowerCase();
-        if (projectName2 < projectName1){
+        if (projectName2 < projectName1) {
           return -1
         }
         return 1
@@ -83,7 +83,7 @@ export default function ProjectManagement(props) {
       sorter: ((item2, item1) => {
         let categoryName1 = item1?.categoryName.trim().toLowerCase();
         let categoryName2 = item2?.categoryName.trim().toLowerCase();
-        if (categoryName2 < categoryName1){
+        if (categoryName2 < categoryName1) {
           return -1
         }
         return 1
@@ -101,7 +101,7 @@ export default function ProjectManagement(props) {
       sorter: ((item2, item1) => {
         let creator1 = item1?.creator.name.trim().toLowerCase();
         let creator2 = item2?.creator.name.trim().toLowerCase();
-        if (creator2 < creator1){
+        if (creator2 < creator1) {
           return -1
         }
         return 1
@@ -112,13 +112,26 @@ export default function ProjectManagement(props) {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <div className="text-center text-light" style={{ display: 'inline-block', backgroundColor: '#40a9ff', width: '30px', height: '35px', borderRadius: '3px' }}>
-            <a><EditOutlined style={{ marginTop: '10px' }} /></a>
-          </div>
-          <div className="text-center text-light" style={{ display: 'inline-block', backgroundColor: '#f5222d', width: '30px', height: '35px', borderRadius: '3px' }}>
-            <a><DeleteOutlined style={{ marginTop: '10px' }} /></a>
-          </div>
-
+          <button
+            onClick = {()=>{
+              let component = <FormEditProject/>
+              dispatch(actOpenEditModal(component))
+            }}
+            className="btn btn-primary"
+            style={{
+              borderRadius: '3px',
+              border:'none',
+            }}>
+            <a><EditOutlined style={{paddingBottom:'5px'}} /></a>
+          </button>
+          <button
+            className="btn btn-danger"
+            style={{
+              borderRadius: '3px',
+              border:'none',
+            }}>
+            <a><DeleteOutlined style={{paddingBottom:'5px'}} /></a>
+          </button>
         </Space>
       ),
     },
