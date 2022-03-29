@@ -8,12 +8,14 @@ import { history } from "./utils/history"
 import UserLoginComponent from './templates/UserLoginTemplate/index'
 import Loading from './components/Loading'
 import { renderRoutesHome } from './routes'
+import ModalPopUp from "./HOC/ModalPopUp";
 function App() {
   const loading = useSelector(state => state.loadingReducer.loadStatus);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Router history={history}>
         {loading ? <Loading /> : null}
+        <ModalPopUp />
         <Switch>
           {renderRoutesHome()}
           <Route path="/auth" component={UserLoginComponent} />
