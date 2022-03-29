@@ -6,7 +6,7 @@ import {
   DeleteOutlined
 } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import {actGetListProjectSaga} from '../redux/actions/actGetListProject'
+import { actGetListProjectSaga } from '../redux/actions/actGetListProject'
 
 
 export default function ProjectManagement(props) {
@@ -16,7 +16,7 @@ export default function ProjectManagement(props) {
   }, [])
   const projectList = useSelector(state => state.projectManagementReducer.projectList)
     .map(project => {
-      return {...project, key: project.id}
+      return { ...project, key: project.id }
     })
 
   const [state, setState] = useState({
@@ -24,7 +24,7 @@ export default function ProjectManagement(props) {
     sortedInfo: null,
   })
   const handleChange = (pagination, filters, sorter) => {
-    console.log('Various parameters', pagination, filters, sorter);
+    // console.log('Various parameters', pagination, filters, sorter);
     setState({
       filteredInfo: filters,
       sortedInfo: sorter,
@@ -55,39 +55,57 @@ export default function ProjectManagement(props) {
   filteredInfo = filteredInfo || {};
   const columns = [
     {
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
+      sorter: ((item2, item1) => {
+        return item2?.id - item1?.id;
+      }),
+      sortDirections: ['descend'],
+    },
+    {
       title: 'projectName',
       dataIndex: 'projectName',
       key: 'projectName',
+      sorter: ((item2, item1) => {
+        let projectName1 = item1?.projectName.trim().toLowerCase();
+        let projectName2 = item2?.projectName.trim().toLowerCase();
+        if (projectName2 < projectName1){
+          return -1
+        }
+        return 1
+      })
     },
-    // {
-    //   title: 'Description',
-    //   dataIndex: 'description',
-    //   key: 'description',
-    //   render: (text, record, index) => {
-    //     let reactNode = parse(text)
-    //     let htmlContent = reactNode.props?.children
-    //     return (
-    //       <>
-    //         {htmlContent ? htmlContent : ''}
-    //       </>
-    //     )
-    //   }
-    // },
     {
       title: 'Category Name',
       dataIndex: 'categoryName',
       key: 'categoryName',
+      sorter: ((item2, item1) => {
+        let categoryName1 = item1?.categoryName.trim().toLowerCase();
+        let categoryName2 = item2?.categoryName.trim().toLowerCase();
+        if (categoryName2 < categoryName1){
+          return -1
+        }
+        return 1
+      })
     },
     {
       title: 'Creator',
       dataIndex: 'creator',
       key: 'creator',
       render: (text, record, index) => {
-        console.log(text);
         return (
           <><Tag color="green">{text.name}</Tag></>
         )
-      }
+      },
+      sorter: ((item2, item1) => {
+        let creator1 = item1?.creator.name.trim().toLowerCase();
+        let creator2 = item2?.creator.name.trim().toLowerCase();
+        if (creator2 < creator1){
+          return -1
+        }
+        return 1
+      })
     },
     {
       title: 'Action',
