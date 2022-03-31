@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Button, Space, Tag } from 'antd';
+import { Table, Button, Space, Tag, Popconfirm } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined
@@ -7,7 +7,10 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { actGetListProjectSaga } from '../redux/actions/actGetListProject'
 import { actOpenEditModal } from '../redux/actions/actModalPopUp';
+import { actEditProject } from '../redux/actions/actEditProject'
 import FormEditProject from '../components/Forms/FormEditProject';
+import { actDeleteProject } from '../redux/actions/actDeleteProject';
+
 
 export default function ProjectManagement(props) {
   const dispatch = useDispatch();
@@ -113,25 +116,39 @@ export default function ProjectManagement(props) {
       render: (text, record) => (
         <Space size="middle">
           <button
-            onClick = {()=>{
-              let component = <FormEditProject/>
+            onClick={() => {
+              let component = <FormEditProject />
+              // Load Edit form modal
               dispatch(actOpenEditModal(component))
+              // Fill data to edit form
+              console.log(record);
+              dispatch(actEditProject(record));
             }}
             className="btn btn-primary"
             style={{
               borderRadius: '3px',
-              border:'none',
+              border: 'none',
             }}>
-            <a><EditOutlined style={{paddingBottom:'5px'}} /></a>
+            <a><EditOutlined style={{ paddingBottom: '5px' }} /></a>
           </button>
-          <button
-            className="btn btn-danger"
-            style={{
-              borderRadius: '3px',
-              border:'none',
-            }}>
-            <a><DeleteOutlined style={{paddingBottom:'5px'}} /></a>
-          </button>
+          <Popconfirm
+            title='Are you sure to delete this project?'
+            onConfirm={() => {
+              dispatch(actDeleteProject(record.id))
+            }}
+            okText="Yes"
+            cancelText="No"
+          >
+            <button
+              className="btn btn-danger"
+              style={{
+                borderRadius: '3px',
+                border: 'none',
+              }}>
+              <DeleteOutlined style={{ paddingBottom: '5px' }} />
+            </button>
+          </Popconfirm>
+
         </Space>
       ),
     },

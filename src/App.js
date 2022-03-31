@@ -9,6 +9,7 @@ import UserLoginComponent from './templates/UserLoginTemplate/index'
 import Loading from './components/Loading'
 import { renderRoutesHome } from './routes'
 import ModalPopUp from "./HOC/ModalPopUp";
+
 function App() {
   const loading = useSelector(state => state.loadingReducer.loadStatus);
   return (

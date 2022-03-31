@@ -12,4 +12,10 @@ export const jiraService = {
   
   getListProject: () => api
     .get('Project/getAllProject'),
+  
+  editProject: (projectUpdate) => api
+    .put(`Project/updateProject?projectId=${projectUpdate.id}`,projectUpdate),
+
+  deleteProject: (id) => api
+    .delete(`Project/deleteProject?projectId=${id}`)
 }

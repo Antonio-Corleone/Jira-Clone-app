@@ -20,7 +20,7 @@ export default function ModalPopUp() {
   return (
     <>
       <Drawer
-        title="Create a new account"
+        title="Edit project"
         width={720}
         onClose={onClose}
         visible={visible}

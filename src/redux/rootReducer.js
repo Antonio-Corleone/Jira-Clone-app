@@ -4,7 +4,8 @@ import { combineReducers } from "redux";
 import loadingReducer from "./reducers/loadingReducer";
 import createProjectReducer from "./reducers/createProjectReducer"
 import projectManagementReducer from "./reducers/projectManagementReducer";
-import modalPopUpRenderer from "./reducers/modalPopUpReducer"
+import modalPopUpRenderer from "./reducers/modalPopUpReducer";
+import projectReducer from "./reducers/projectReducer";
 
 
 const rootReducer = combineReducers({
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   createProjectReducer,
   projectManagementReducer,
   modalPopUpRenderer,
+  projectReducer
 });
 
 export default rootReducer;

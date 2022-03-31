@@ -1,3 +1,7 @@
-.ant-drawer-footer{
+.ant-drawer-footer {
   text-align: right;
+}
+.ant-drawer-title {
+  font-size: 25px !important;
+  color: #7cb305 !important;
 }
