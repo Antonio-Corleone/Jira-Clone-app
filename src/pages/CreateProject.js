@@ -4,16 +4,12 @@ import { withFormik } from 'formik'
 import * as Yup from 'yup';
 import { connect, useSelector, useDispatch } from 'react-redux'
 
-import { actGetProjectCategorySaga } from '../redux/actions/actGetProjectCategory'
-import { actCreateProject } from '../redux/actions/actCreateProject'
+import { actCreateProject, actGetProjectCategorySaga } from '../redux/actions/actProject'
 function CreateProject(props) {
   const arrProjectCategory = useSelector(state => state.createProjectReducer.arrProjectCategory);
   const dispatch = useDispatch();
   const {
-    touched,
-    errors,
     handleChange,
-    handleBlur,
     handleSubmit,
     setFieldValue,
   } = props;
@@ -25,7 +21,7 @@ function CreateProject(props) {
     return ()=>{
       
     }
-  }, [])
+  }, [dispatch])
   return (
     <div className="container m-5">
       <h3>Create Project</h3>
@@ -86,7 +82,6 @@ const CreateProjectFormik = withFormik({
 
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
-    console.log('props', props);
     props.dispatch(actCreateProject(values))
   },
 

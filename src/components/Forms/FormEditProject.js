@@ -7,8 +7,7 @@ import * as Yup from 'yup';
 import { Editor } from '@tinymce/tinymce-react';
 
 import { actSubmitEditModal } from '../../redux/actions/actModalPopUp'
-import { actGetProjectCategorySaga } from '../../redux/actions/actGetProjectCategory';
-import { actEditProjectSaga } from '../../redux/actions/actEditProject';
+import { actGetProjectCategorySaga, actEditProjectSaga } from '../../redux/actions/actProject';
 
 function FormEditProject(props) {
 

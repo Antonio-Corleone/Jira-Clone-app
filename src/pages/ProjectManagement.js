@@ -7,21 +7,25 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { actGetListProjectSaga } from '../redux/actions/actGetListProject'
+import {
+  actGetListProjectSaga,
+  actEditProject,
+  actDeleteProject,
+} from '../redux/actions/actProject'
+import {
+  actGetUserApiSaga,
+  actAddUserProjectSaga,
+  actDeleteUserProjectSaga
+} from '../redux/actions/actUser';
 import { actOpenEditModal } from '../redux/actions/actModalPopUp';
-import { actEditProject } from '../redux/actions/actEditProject'
 import FormEditProject from '../components/Forms/FormEditProject';
-import { actDeleteProject } from '../redux/actions/actDeleteProject';
-import { actGetUserApiSaga } from '../redux/actions/actGetUser'
-import { actAddUserProjectSaga } from '../redux/actions/actAddMember';
-import { actDeleteUserProjectSaga } from '../redux/actions/actDeleteMember';
 
 export default function ProjectManagement(props) {
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actGetListProjectSaga())
-  }, [])
+  }, [dispatch])
   const projectList = useSelector(state => state.projectManagementReducer.projectList)
     .map(project => {
       return { ...project, key: project.id }
@@ -59,9 +63,9 @@ export default function ProjectManagement(props) {
       },
     });
   };
-  let { sortedInfo, filteredInfo } = state;
-  sortedInfo = sortedInfo || {};
-  filteredInfo = filteredInfo || {};
+  // let { sortedInfo, filteredInfo } = state;
+  // sortedInfo = sortedInfo || {};
+  // filteredInfo = filteredInfo || {};
   const columns = [
     {
       title: 'id',
@@ -145,18 +149,18 @@ export default function ProjectManagement(props) {
                             return (
                               <tr key={index}>
                                 <td className="align-middle">{member.userId}</td>
-                                <td className="align-middle text-center"><img src={member.avatar} width='30' height='30' style={{ borderRadius: '50%' }} /></td>
+                                <td className="align-middle text-center"><img alt="avatar" src={member.avatar} width='30' height='30' style={{ borderRadius: '50%' }} /></td>
                                 <td className="align-middle">{member.name}</td>
                                 <td className="align-middle text-center">
                                   <Button
-                                    onClick={()=>{
+                                    onClick={() => {
                                       let userProject = {
                                         "projectId": record.id,
                                         "userId": Number(member.userId)
                                       }
                                       dispatch(actDeleteUserProjectSaga(userProject))
                                     }}
-                                    style={{ backgroundColor: '#ff4d4f', color: '#fff', borderRadius: '50%' }} 
+                                    style={{ backgroundColor: '#ff4d4f', color: '#fff', borderRadius: '50%' }}
                                     icon={<CloseOutlined style={{ fontSize: 18 }} />}></Button>
                                 </td>
                               </tr>
@@ -197,7 +201,7 @@ export default function ProjectManagement(props) {
                 />}
               trigger="click"
             >
-              <Button style={{ borderRadius: '50%', backgroundColor: '#9254de',color:'#f0f0f0'}} icon={<PlusOutlined style={{ fontSize: 18 }} />}></Button>
+              <Button style={{ borderRadius: '50%', backgroundColor: '#9254de', color: '#f0f0f0' }} icon={<PlusOutlined style={{ fontSize: 18 }} />}></Button>
             </Popover>
           </div>
         )
@@ -222,7 +226,7 @@ export default function ProjectManagement(props) {
               borderRadius: '3px',
               border: 'none',
             }}>
-            <a><EditOutlined style={{ paddingBottom: '5px' }} /></a>
+            <EditOutlined style={{ paddingBottom: '5px' }} />
           </button>
           <Popconfirm
             title='Are you sure to delete this project?'

@@ -3,7 +3,7 @@ import { Layout } from 'antd'
 
 import LoginComponent from '../../pages/LoginForm';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 export default function UserLoginComponent(props) {
   const [{ width, height }, setSize] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -14,6 +14,9 @@ export default function UserLoginComponent(props) {
         width: window.innerWidth,
         height: window.innerHeight
       })
+    }
+    return () => {
+      window.onresize = null;
     }
   }, [])
   return (
