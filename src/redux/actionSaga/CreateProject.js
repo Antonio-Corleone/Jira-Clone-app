@@ -1,4 +1,4 @@
-import { call, delay, fork, take, takeEvery, takeLatest, put } from 'redux-saga/effects';
+import { call, delay, takeLatest, put } from 'redux-saga/effects';
 import { jiraService } from '../../services';
 import { CREATE_PROJECT_SAGA } from '../constants';
 import { actShowLoading, actHideLoading } from '../actions/actLoading';

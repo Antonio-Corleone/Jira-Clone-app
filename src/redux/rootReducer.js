@@ -6,6 +6,7 @@ import createProjectReducer from "./reducers/createProjectReducer"
 import projectManagementReducer from "./reducers/projectManagementReducer";
 import modalPopUpRenderer from "./reducers/modalPopUpReducer";
 import projectReducer from "./reducers/projectReducer";
+import userReducer from "./reducers/userReducer";
 
 
 const rootReducer = combineReducers({
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   createProjectReducer,
   projectManagementReducer,
   modalPopUpRenderer,
-  projectReducer
+  projectReducer,
+  userReducer,
 });
 
 export default rootReducer;
