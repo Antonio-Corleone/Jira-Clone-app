@@ -6,12 +6,13 @@ import {
   DELETE_PROJECT_SAGA,
   EDIT_PROJECT_SAGA,
   GET_LIST_PROJECT_SAGA,
-  GET_PROJECT_CATEGORY_SAGA
+  GET_PROJECT_CATEGORY_SAGA,
+  GET_PROJECT_DETAIL_SAGA
 } from '../constants';
 
 import { actShowLoading, actHideLoading } from '../actions/actLoading';
 import { actCloseModal } from '../actions/actModalPopUp'
-import { actGetListProjectSaga, actGetListProject, actGetProjectCategory } from '../actions/actProject';
+import { actGetListProjectSaga, actGetListProject, actGetProjectCategory, actGetProjectDetail } from '../actions/actProject';
 
 import { notiFunction } from '../../utils/notification';
 import { history } from '../../utils/history'
@@ -111,4 +112,22 @@ function* getProjectCategory(action) {
 
 export function* ProjectCategoryRequest() {
   yield takeLatest(GET_PROJECT_CATEGORY_SAGA, getProjectCategory)
+}
+
+// Get project detail
+function* getProjectId(action) {
+  // Call api
+  try {
+    const { data } = yield call(() => jiraService.getProjectDetail(action.payload));
+
+    yield put(actGetProjectDetail(data.content))
+  }
+  catch (err) {
+    console.log(err.response.data);
+  }
+}
+
+
+export function* GetProjectIdRequest() {
+  yield takeLatest(GET_PROJECT_DETAIL_SAGA, getProjectId)
 }

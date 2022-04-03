@@ -10,14 +10,19 @@ const routesHome = [
     component: lazy(() => import("../pages/HomePage")),
   },
   {
-    exact: true,
+    exact: false,
     path: "/create-project",
     component: lazy(() => import("../pages/CreateProject")),
   },
   {
-    exact: true,
+    exact: false,
     path: "/project-management",
     component: lazy(() => import("../pages/ProjectManagement")),
+  },
+  {
+    exact: false,
+    path: "/project-detail/:projectId",
+    component: lazy(() => import("../pages/ProjectDetail")),
   },
 ];
 

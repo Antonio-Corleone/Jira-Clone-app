@@ -3,13 +3,16 @@ import MainContent from './MainContent'
 import MainInfo from './MainInfo'
 import MainHeader from './MainHeader'
 
-export default function Main() {
+export default function Main(props) {
+  const { data } = props;
+
   return (
     <div className="main">
-      <MainHeader />
-      <h3>Cyber Board</h3>
-      <MainInfo />
-      <MainContent />
+      <MainHeader projectName={data.projectName} />
+
+      <MainInfo projectDetail={data} />
+
+      <MainContent projectDetail={data} />
     </div>
   )
 }

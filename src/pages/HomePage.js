@@ -1,7 +1,10 @@
-import React from 'react'
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import Main from '../templates/HomeTemplate/_components/Main'
+
 export default function HomePage() {
+  const { projectDetail } = useSelector(state => state.projectReducer);
   return (
-    <Main />
+    <Main data={projectDetail} />
   )
 }

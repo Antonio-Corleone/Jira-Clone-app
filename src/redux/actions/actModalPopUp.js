@@ -8,12 +8,19 @@ export const actCloseModal = () => ({
   type: actModal.CLOSE_MODAL_POPUP
 });
 
-export const actOpenEditModal=(component) => ({
+export const actOpenEditModal = (component, title) => ({
   type: actModal.OPEN_EDIT_MODAL_POPUP,
-  component: component
+  component: component,
+  title: title
 })
 
-export const actSubmitEditModal=(submitForm) => ({
+export const actSubmitEditModal = (submitForm) => ({
   type: actModal.SUBMIT_EDIT_MODAL,
   submitForm: submitForm
+})
+
+export const actOpenCreateTaskModal = (component, title) => ({
+  type: actModal.OPEN_CREATE_TASK_MODAL,
+  component: component,
+  title: title
 })

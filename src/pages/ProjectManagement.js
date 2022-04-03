@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { NavLink } from 'react-router-dom'
 import { Table, Button, Space, Tag, Popconfirm, Avatar, Popover, AutoComplete } from 'antd';
 import {
   EditOutlined,
@@ -22,15 +23,18 @@ import FormEditProject from '../components/Forms/FormEditProject';
 
 export default function ProjectManagement(props) {
 
+  const searchRef = useRef(null);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actGetListProjectSaga())
   }, [dispatch])
+
   const projectList = useSelector(state => state.projectManagementReducer.projectList)
     .map(project => {
       return { ...project, key: project.id }
     })
   const userSearch = useSelector(state => state.userReducer.userSearch)
+
   const [value, setValue] = useState('')
   const [state, setState] = useState({
     filteredInfo: null,
@@ -80,6 +84,11 @@ export default function ProjectManagement(props) {
       title: 'projectName',
       dataIndex: 'projectName',
       key: 'projectName',
+      render: (text, record, index) => {
+        return (
+          <NavLink to={`/project-detail/${record.id}`}>{text}</NavLink>
+        )
+      },
       sorter: ((item2, item1) => {
         let projectName1 = item1?.projectName.trim().toLowerCase();
         let projectName2 = item2?.projectName.trim().toLowerCase();
@@ -182,7 +191,15 @@ export default function ProjectManagement(props) {
               content={() =>
                 <AutoComplete
                   style={{ width: '100%' }}
-                  onSearch={(value) => { dispatch(actGetUserApiSaga(value)) }}
+                  onSearch={(value) => {
+                    if (searchRef.current) {
+                      clearTimeout(searchRef.current);
+                    }
+                    searchRef.current = setTimeout(() => {
+                      dispatch(actGetUserApiSaga(value))
+                    }, 300)
+
+                  }}
                   options={userSearch?.map((item, index) => {
                     return { label: item.name, value: item.userId.toString() }
                   })}
@@ -216,9 +233,8 @@ export default function ProjectManagement(props) {
             onClick={() => {
               let component = <FormEditProject />
               // Load Edit form modal
-              dispatch(actOpenEditModal(component))
+              dispatch(actOpenEditModal(component,'Edit project'))
               // Fill data to edit form
-              console.log(record);
               dispatch(actEditProject(record));
             }}
             className="btn btn-primary"

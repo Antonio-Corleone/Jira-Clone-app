@@ -8,7 +8,7 @@ import './style.css'
 
 export default function ModalPopUp() {
 
-  const { visible,componentContent, callBackSubmit } = useSelector(state => state.modalPopUpRenderer);
+  const { visible,componentContent, callBackSubmit, title } = useSelector(state => state.modalPopUpRenderer);
   const dispatch = useDispatch();
   const showDrawer = () => {
     dispatch(actOpenModal())
@@ -20,7 +20,7 @@ export default function ModalPopUp() {
   return (
     <>
       <Drawer
-        title="Edit project"
+        title={title}
         width={720}
         onClose={onClose}
         visible={visible}

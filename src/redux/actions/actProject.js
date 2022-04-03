@@ -34,7 +34,18 @@ export const actGetProjectCategorySaga = () => ({
   type: actProject.GET_PROJECT_CATEGORY_SAGA,
 })
 
-export const actGetProjectCategory =(data)=> ({
+export const actGetProjectCategory = (data) => ({
   type: actProject.GET_PROJECT_CATEGORY,
+  payload: data
+})
+
+//Get project detail
+export const actGetProjectDetailSaga = (id) => ({
+  type: actProject.GET_PROJECT_DETAIL_SAGA,
+  payload: id
+})
+
+export const actGetProjectDetail = (data) => ({
+  type: actProject.GET_PROJECT_DETAIL,
   payload: data
 })

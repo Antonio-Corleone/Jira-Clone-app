@@ -18,6 +18,9 @@ export const jiraService = {
 
   deleteProject: (id) => api
     .delete(`Project/deleteProject?projectId=${id}`),
+  
+  getProjectDetail: (id) => api
+    .get(`Project/getProjectDetail?id=${id}`),
 
   getUserInfo: (keyword) => api
     .get(`Users/getUser?keyword=${keyword}`),
@@ -26,5 +29,11 @@ export const jiraService = {
     .post('Project/assignUserProject', userProject),
 
   deleteMemberProject: (userProject) => api
-    .post('Project/removeUserFromProject',userProject)
+    .post('Project/removeUserFromProject',userProject),
+
+  getTaskType: () => api
+    .get('/TaskType/getAll'),
+
+  getTaskPriority: () => api
+    .get('Priority/getAll')
 }
