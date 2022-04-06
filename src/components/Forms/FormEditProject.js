@@ -28,10 +28,10 @@ function FormEditProject(props) {
     // console.log(content);
     setFieldValue('description', content);
   }
-  const submitForm = (e) => {
-    e.preventDefault();
-    alert('FormEditProject submit')
-  }
+  // const submitForm = (e) => {
+  //   e.preventDefault();
+  //   alert('FormEditProject submit')
+  // }
   useEffect(() => {
     // Get project categoryId
     dispatch(actGetProjectCategorySaga())

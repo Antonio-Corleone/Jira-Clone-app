@@ -16,6 +16,7 @@ import { actGetListProjectSaga, actGetListProject, actGetProjectCategory, actGet
 
 import { notiFunction } from '../../utils/notification';
 import { history } from '../../utils/history'
+import { actGetUserByProjectIdSaga } from '../actions/actUser';
 
 // Create project Saga
 function* createProject(action) {
@@ -27,7 +28,7 @@ function* createProject(action) {
     history.push('/project-management')
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
   }
   yield put(actHideLoading());
 }
@@ -48,7 +49,7 @@ function* deleteProject(action) {
 
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
     notiFunction('error', 'Delete project fail!')
   }
 
@@ -68,15 +69,16 @@ function* editProject(action) {
     yield call(() => jiraService.editProject(action.payload));
     yield put(actGetListProjectSaga());
     yield put(actCloseModal())
+    notiFunction('success', 'Edit project successfully!')
 
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
+    notiFunction('error', 'Edit project fail!')
   }
 
   yield put(actHideLoading());
 }
-
 
 export function* UpdateProjectRequest() {
   yield takeLatest(EDIT_PROJECT_SAGA, editProject)
@@ -88,9 +90,10 @@ export function* getProjectList(action) {
   try {
     const { data } = yield call(() => jiraService.getListProject())
     yield put(actGetListProject(data.content))
+    yield put(actGetUserByProjectIdSaga(data.content[0].id))
   }
   catch (error) {
-    console.log(error.response.data);
+    console.log(error.response?.data);
   }
 }
 
@@ -105,7 +108,7 @@ function* getProjectCategory(action) {
     yield put(actGetProjectCategory(data.content))
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
   }
 }
 
@@ -123,10 +126,9 @@ function* getProjectId(action) {
     yield put(actGetProjectDetail(data.content))
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
   }
 }
-
 
 export function* GetProjectIdRequest() {
   yield takeLatest(GET_PROJECT_DETAIL_SAGA, getProjectId)

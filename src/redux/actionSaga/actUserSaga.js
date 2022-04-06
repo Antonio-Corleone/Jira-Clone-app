@@ -6,9 +6,10 @@ import {
   USER_SIGNIN_SAGA,
   GET_USER_INFO_SAGA,
   ADD_USER_PROJECT_SAGA,
-  DELETE_USER_PROJECT_SAGA
+  DELETE_USER_PROJECT_SAGA,
+  GET_USER_BY_PROJECT_SAGA
 } from '../constants';
-import { actGetUserApi } from '../actions/actUser'
+import { actGetUserApi, actGetUserByProjectId } from '../actions/actUser'
 import { actShowLoading, actHideLoading } from '../actions/actLoading'
 import { actGetListProjectSaga } from '../actions/actProject';
 
@@ -25,7 +26,7 @@ function* signInSaga(action) {
     // console.log(data);
     history.push('/home')
   }
-  catch (err) { console.log(err.response.data); }
+  catch (err) { console.log(err.response?.data); }
   yield put(actHideLoading());
 }
 
@@ -43,7 +44,7 @@ function* getUserApi(action) {
     yield put(actGetUserApi(data.content))
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
   }
 }
 
@@ -62,7 +63,7 @@ function* addMemberProject(action) {
     yield put(actGetListProjectSaga());
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
   }
   yield put(actHideLoading());
 }
@@ -81,7 +82,7 @@ function* deleteMemberProject(action) {
     yield put(actGetListProjectSaga());
   }
   catch (err) {
-    console.log(err.response.data);
+    console.log(err.response?.data);
   }
   yield put(actHideLoading());
 }
@@ -89,4 +90,26 @@ function* deleteMemberProject(action) {
 
 export function* RemoveMemberRequest() {
   yield takeLatest(DELETE_USER_PROJECT_SAGA, deleteMemberProject)
+}
+
+// Get user from project id
+function* getUserProject(action) {
+  // Call api
+  try {
+    const { data, status } = yield call(() => jiraService.getUserByProjectId(action.payload));
+    // console.log(data);
+    if (status === 200) {
+      yield put(actGetUserByProjectId(data.content));
+    }
+
+  }
+  catch (err) {
+    console.log(err.response?.data);
+    yield put(actGetUserByProjectId([]));
+  }
+}
+
+
+export function* getUserProjectRequest() {
+  yield takeLatest(GET_USER_BY_PROJECT_SAGA, getUserProject)
 }

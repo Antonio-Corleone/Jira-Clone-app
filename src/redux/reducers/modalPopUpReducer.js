@@ -25,6 +25,8 @@ const modalPopUpRenderer = (state = initialState, action) => {
 
     case actModal.OPEN_CREATE_TASK_MODAL:
       return { ...state, visible: true, title: action.title, componentContent: action.component }
+    case actModal.SUBMIT_TASK_MODAL:
+      return { ...state, callBackSubmit: action.submitForm }
     default:
       return state
   }

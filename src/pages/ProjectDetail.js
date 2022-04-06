@@ -10,7 +10,6 @@ export default function ProjectDetail(props) {
   const dispatch = useDispatch();
   const { projectDetail } = useSelector(state => state.projectReducer);
   // console.log(projectDetail);
-
   useEffect(() => {
     const { projectId } = props.match.params;
     dispatch(actGetProjectDetailSaga(projectId));

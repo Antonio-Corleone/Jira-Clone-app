@@ -1,7 +1,8 @@
-import { GET_USER_INFO } from '../constants';
+import { GET_USER_BY_PROJECT, GET_USER_INFO } from '../constants';
 
 const initialState = {
-  userSearch: []
+  userSearch: [],
+  listUserProject: [],
 }
 
 const userReducer = (state = initialState, action) => {
@@ -9,7 +10,8 @@ const userReducer = (state = initialState, action) => {
 
   case GET_USER_INFO:
     return { ...state, userSearch:action.payload }
-
+  case GET_USER_BY_PROJECT:
+    return { ...state, listUserProject:action.payload }
   default:
     return state
   }

@@ -1,30 +1,39 @@
 import { Editor } from '@tinymce/tinymce-react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Select, Slider } from 'antd';
-import { useSelector, useDispatch } from 'react-redux'
-import { actGetListProjectSaga } from '../../redux/actions/actProject';
-import { actGetTaskPrioritySaga, actGetTaskTypeSaga } from '../../redux/actions/actTasks';
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { withFormik } from 'formik'
+import * as Yup from 'yup';
 
-const { Option } = Select;
+import { actGetListProjectSaga } from '../../redux/actions/actProject';
+import { actCreateNewTaskSaga, actGetTaskPrioritySaga, actGetTaskStatusSaga, actGetTaskTypeSaga } from '../../redux/actions/actTasks';
+import { actGetUserApiSaga, actGetUserByProjectIdSaga } from '../../redux/actions/actUser';
+import { actSubmitTaskModal } from '../../redux/actions/actModalPopUp';
 
 const children = [];
-for (let i = 10; i < 36; i++) {
-  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
 
-function handleChange(value) {
-  console.log(`Selected: ${value}`);
-}
+function FormCreateTask(props) {
 
-export default function FormCreateTask(props) {
+  const {
+    handleChange,
+    handleSubmit,
+    setFieldValue
+  } = props;
+
   const dispatch = useDispatch();
+  const searchRef = useRef(null);
   const { projectList } = useSelector(state => state.projectManagementReducer)
-  const { listTaskTypes, listTaskPriority } = useSelector(state => state.createTasksReducer)
-
+  const { listTaskTypes, listTaskPriority, listTaskStatus } = useSelector(state => state.createTasksReducer)
+  const { listUserProject } = useSelector(state => state.userReducer)
+  const userOptions = listUserProject?.map((user, index) => {
+    return { value: user.userId, label: user.name }
+  })
   useEffect(() => {
     dispatch(actGetListProjectSaga());
     dispatch(actGetTaskTypeSaga());
     dispatch(actGetTaskPrioritySaga());
+    dispatch(actGetTaskStatusSaga())
+    dispatch(actSubmitTaskModal(handleSubmit))
   }, [dispatch])
 
   const [timeTracking, setTimeTracking] = useState({
@@ -33,13 +42,16 @@ export default function FormCreateTask(props) {
   })
   const handleEditorChange = (content, editor) => {
     // console.log(content);
-    // setFieldValue('description', content);
+    setFieldValue('description', content);
   }
   return (
-    <div className="container">
+    <form className="container" onSubmit={handleSubmit}>
       <div className="form-group">
         <label style={{ fontSize: "16px" }} htmlFor="project-id">Project</label>
-        <select className="form-control" name="projectId" id="project-id">
+        <select className="form-control" name="projectId" id="project-id" onChange={(e) => {
+          setFieldValue('projectId', Number(e.target.value))
+          dispatch(actGetUserByProjectIdSaga(e.target.value))
+        }}>
           {projectList?.map((project, index) => {
             return (
               <option key={index} value={project.id}>{project.projectName}</option>
@@ -48,11 +60,25 @@ export default function FormCreateTask(props) {
         </select>
       </div>
       <div className="form-group">
+        <label style={{ fontSize: "16px" }} htmlFor="task-name">Task Name</label>
+        <input className="form-control" type="text" name="taskName" id="task-name" onChange={handleChange} />
+      </div>
+      <div className="form-group">
+        <label style={{ fontSize: "16px" }} htmlFor="statusId">Status</label>
+        <select className="form-control" type="text" name="statusId" id="statusId" onChange={handleChange}>
+          {listTaskStatus?.map((task, index) => {
+            return (
+              <option key={index} value={task.statusId}>{task.statusName}</option>
+            )
+          })}
+        </select>
+      </div>
+      <div className="form-group">
         <div className="row">
           <div className="col-6">
             <label style={{ fontSize: "16px" }} htmlFor="priority-id">Priority</label>
-            <select className="form-control" name="priorityId" id="priority-id">
-              {listTaskPriority?.map((task,index)=>{
+            <select className="form-control" name="priorityId" id="priority-id" onChange={handleChange}>
+              {listTaskPriority?.map((task, index) => {
                 return (
                   <option key={index} value={task.priorityId}>{task.priority}</option>
                 )
@@ -61,7 +87,7 @@ export default function FormCreateTask(props) {
           </div>
           <div className="col-6">
             <label style={{ fontSize: "16px" }} htmlFor="task-type">Task type</label>
-            <select className="form-control" name="typeId" id="task-type">
+            <select className="form-control" name="typeId" id="task-type" onChange={handleChange}>
               {listTaskTypes?.map((taskType, index) => {
                 return (
                   <option key={index} value={taskType.id}>{taskType.taskType}</option>
@@ -77,10 +103,21 @@ export default function FormCreateTask(props) {
               <Select
                 mode="multiple"
                 id="assignees"
+                options={userOptions}
+                onSearch={(value) => {
+                  if (searchRef.current) {
+                    clearTimeout(searchRef.current);
+                  }
+                  searchRef.current = setTimeout(() => {
+                    dispatch(actGetUserApiSaga(value))
+                  }, 300)
+                }}
                 name="listUserAsign"
+                optionFilterProp='label'
                 placeholder="Please select"
-                defaultValue={['a10', 'c12']}
-                onChange={handleChange}
+                onChange={(values) => {
+                  setFieldValue('listUserAsign', values)
+                }}
                 style={{ width: '100%' }}
               >
                 {children}
@@ -100,7 +137,7 @@ export default function FormCreateTask(props) {
           <div className="row">
             <div className="col-6">
               <label style={{ fontSize: "16px" }} htmlFor="originalEstimate">Original Estimate</label>
-              <input type="number" min={0} name="originalEstimate" id="originalEstimate" defaultValue={0} className="form-control" />
+              <input type="number" min={0} name="originalEstimate" id="originalEstimate" defaultValue={0} className="form-control" onChange={handleChange} />
             </div>
             <div className="col-6">
               <div className="row">
@@ -108,6 +145,7 @@ export default function FormCreateTask(props) {
                   <label style={{ fontSize: "16px" }} htmlFor="timeTrackingSpent">Time spent</label>
                   <input
                     onChange={(e) => {
+                      setFieldValue('timeTrackingSpent', Number(e.target.value))
                       setTimeTracking({
                         ...timeTracking,
                         timeTrackingSpent: e.target.value
@@ -124,6 +162,7 @@ export default function FormCreateTask(props) {
                   <label style={{ fontSize: "16px" }} htmlFor="timeTrackingRemaining">Time remaining</label>
                   <input
                     onChange={(e) => {
+                      setFieldValue('timeTrackingRemaining', Number(e.target.value))
                       setTimeTracking({
                         ...timeTracking,
                         timeTrackingRemaining: e.target.value
@@ -166,6 +205,44 @@ export default function FormCreateTask(props) {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   )
 }
+
+const CreateTaskFormik = withFormik({
+  enableReinitialize: true,
+  mapPropsToValues: (props) => {
+    const { projectList, listTaskTypes, listTaskStatus, listTaskPriority } = props;
+    return {
+      listUserAsign: [],
+      taskName: "",
+      description: "",
+      statusId: listTaskStatus[0]?.statusId,
+      originalEstimate: 0,
+      timeTrackingSpent: 0,
+      timeTrackingRemaining: 0,
+      projectId: projectList[0]?.id,
+      typeId: listTaskTypes[0]?.id,
+      priorityId: listTaskPriority[0]?.priorityId,
+    }
+  },
+  validationSchema: Yup.object().shape({
+
+  }),
+  handleSubmit: (values, { props, setSubmitting }) => {
+    // props.dispatch(actCreateProject(values))
+    props.dispatch(actCreateNewTaskSaga(values))
+  },
+
+  displayName: 'CreateTaskFormik',
+})(FormCreateTask);
+const mapStateToProps = (state) => {
+
+  return {
+    projectList: state.projectManagementReducer.projectList,
+    listTaskTypes: state.createTasksReducer.listTaskTypes,
+    listTaskPriority: state.createTasksReducer.listTaskPriority,
+    listTaskStatus: state.createTasksReducer.listTaskStatus,
+  }
+}
+export default connect(mapStateToProps)(CreateTaskFormik);

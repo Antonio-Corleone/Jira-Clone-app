@@ -10,6 +10,7 @@ function* rootSaga() {
     actUserSaga.GetUserRequest(),
     actUserSaga.AddMemberRequest(),
     actUserSaga.RemoveMemberRequest(),
+    actUserSaga.getUserProjectRequest(),
 
     actProjectSaga.CreateProjectRequest(),
     actProjectSaga.DeleteProjectRequest(),
@@ -20,6 +21,10 @@ function* rootSaga() {
 
     actTaskSaga.GetTaskTypeRequest(),
     actTaskSaga.GetTaskPriorityRequest(),
+    actTaskSaga.GetTaskStatusRequest(),
+    actTaskSaga.CreateNewTaskRequest(),
+    actTaskSaga.GetTaskDetailRequest(),
+    actTaskSaga.UpdateTaskModalRequest(),
   ])
 }
 export default rootSaga;

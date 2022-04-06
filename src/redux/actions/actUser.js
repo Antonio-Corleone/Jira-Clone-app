@@ -27,3 +27,13 @@ export const actDeleteUserProjectSaga = (userProject) => ({
   type: actUser.DELETE_USER_PROJECT_SAGA,
   payload: userProject
 })
+// Get user by project id
+export const actGetUserByProjectIdSaga = (projectId) =>({
+  type: actUser.GET_USER_BY_PROJECT_SAGA,
+  payload: projectId
+})
+
+export const actGetUserByProjectId = (user) => ({
+  type: actUser.GET_USER_BY_PROJECT,
+  payload: user
+})

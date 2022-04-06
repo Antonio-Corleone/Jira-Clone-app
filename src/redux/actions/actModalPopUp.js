@@ -24,3 +24,8 @@ export const actOpenCreateTaskModal = (component, title) => ({
   component: component,
   title: title
 })
+
+export const actSubmitTaskModal = (submitForm) => ({
+  type: actModal.SUBMIT_TASK_MODAL,
+  submitForm: submitForm
+})

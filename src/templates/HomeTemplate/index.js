@@ -13,13 +13,19 @@ export default function HomeTemplate(props) {
         {/* Sider Bar  */}
         <SideBar />
         {/* Menu */}
-        <Menu />
-        {/* Component */}
-        <Route
-          exact={exact}
-          path={path}
-          component={component}
-        />
+        <div className="row">
+          <div className="col-md-3 pl-0 ml-3">
+            <Menu />
+          </div>
+          <div className="col-md-8">
+            {/* Component */}
+            <Route
+              exact={exact}
+              path={path}
+              component={component}
+            />
+          </div>
+        </div>
       </div>
       <Modal />
     </>
