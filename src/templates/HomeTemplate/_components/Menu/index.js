@@ -9,14 +9,14 @@ export default function Menu() {
           <img src={require('../../../../assets/img/download.jfif')} alt="logo" />
         </div>
         <div className="account-info">
-          <p>CyberLearn.vn</p>
+          <p>JIRA APP</p>
           <p>Report bugs</p>
         </div>
       </div>
       <div className="control">
         <div>
           <i className="fa fa-credit-card mr-1" />
-          <NavLink exact to="/home" activeClassName="active">Cyber Board</NavLink>
+          <NavLink exact to="/" activeClassName="active">Cyber Board</NavLink>
         </div>
         <div>
           <i className="fa fa-credit-card mr-1" />

@@ -24,7 +24,7 @@ function* signInSaga(action) {
     const { data } = yield call(() => jiraService.signInService(action.userLogin));
     localStorage.setItem('JiraLogin', JSON.stringify(data.content))
     // console.log(data);
-    history.push('/home')
+    history.push('/')
   }
   catch (err) { console.log(err.response?.data); }
   yield put(actHideLoading());

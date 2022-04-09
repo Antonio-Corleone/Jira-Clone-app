@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+/src/pages/DragAndDropDnD.js
 
 # production
 /build

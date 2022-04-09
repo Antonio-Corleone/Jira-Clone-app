@@ -6,7 +6,7 @@ const routesHome = [
   //home
   {
     exact: true,
-    path: "/home",
+    path: "/",
     component: lazy(() => import("../pages/HomePage")),
   },
   {
@@ -23,6 +23,11 @@ const routesHome = [
     exact: false,
     path: "/project-detail/:projectId",
     component: lazy(() => import("../pages/ProjectDetail")),
+  },
+  {
+    exact: false,
+    path: "/DnD",
+    component: lazy(() => import("../pages/DragAndDropDnD")),
   },
 ];
 
