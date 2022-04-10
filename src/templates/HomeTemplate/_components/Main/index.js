@@ -7,7 +7,7 @@ export default function Main(props) {
   const { data } = props;
 
   return (
-    <div className="main">
+    <div className="main" style={{width:'100%'}}>
       <MainHeader projectName={data.projectName} />
 
       <MainInfo projectDetail={data} />

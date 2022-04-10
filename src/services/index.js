@@ -58,6 +58,9 @@ export const jiraService = {
   insertCommentApi: (newComment) => api
     .post('Comment/insertComment', newComment),
 
-  getListCommentApi: (taskId) => api
-    .get(`Comment/getAll?taskId=${taskId}`)
+  deleteCommentApi: (idComment) => api
+    .delete(`Comment/deleteComment?idComment=${idComment}`),
+
+  updateCommentApi: (id, comment) => api
+    .put(`Comment/updateComment?id=${id}&contentComment=${comment}`)
 }

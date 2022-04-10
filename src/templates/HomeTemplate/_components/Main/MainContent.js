@@ -31,7 +31,7 @@ export default function MainContent(props) {
                     {...provided.droppableProps}
                     key={index}
                     className="card pb-2"
-                    style={{ width: '17rem', height: 'auto' }}
+                    style={{ width: '20rem', height: 'auto' }}
                   >
                     <div className="card-header">
                       {taskList.statusName}

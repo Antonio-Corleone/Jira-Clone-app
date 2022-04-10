@@ -29,6 +29,8 @@ function* rootSaga() {
     actTaskSaga.UpdateTaskStatusRequest(),
 
     actCommentSaga.InsertCommentRequest(),
+    actCommentSaga.DeleteCommentRequest(),
+    actCommentSaga.UpdateCommentRequest(),
   ])
 }
 export default rootSaga;

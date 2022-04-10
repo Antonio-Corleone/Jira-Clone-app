@@ -3,14 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import ReactHtmlParser from 'html-react-parser';
 import { Editor } from '@tinymce/tinymce-react'
 import {
-  actGetTaskDetailSaga,
   actGetTaskPrioritySaga,
   actGetTaskStatusSaga,
   actGetTaskTypeSaga,
   actUpdateTaskModalSaga
 } from '../../../../redux/actions/actTasks';
 import { EDIT_TASK_MODAL, REMOVE_USER_ASSIGNEE } from '../../../../redux/constants';
-import { actInsertComment } from '../../../../redux/actions/actComment';
+import { actDeleteComment, actInsertComment, actUpdateComment } from '../../../../redux/actions/actComment';
 
 
 export default function Modal(props) {
@@ -22,7 +21,12 @@ export default function Modal(props) {
 
   const [openEditor, setOpenEditor] = useState(false);
   const [editorContent, setEditorContent] = useState(taskDetailModal.description)
-  const [commentContent, setCommentContent] = useState('')
+  const [commentContent, setCommentContent] = useState('');
+  const [editComment, setEditComment] = useState(false)
+  const [historyComment, setHistoryComment] = useState({
+    taskId: '',
+    comment: ''
+  })
   useEffect(() => {
     dispatch(actGetTaskPrioritySaga());
     dispatch(actGetTaskStatusSaga());
@@ -144,50 +148,79 @@ export default function Modal(props) {
               <div className="row">
                 <div className="col-8">
                   <p className="issue">This is an issue of type: Task.</p>
-                  <div className="description" style={{ cursor: 'pointer' }}>
+                  <div className="description" style={{ cursor: 'pointer', paddingRight: '25px' }}>
                     <p className="font-weight-bold" onClick={() => { setOpenEditor(!openEditor) }}>Description</p>
                     {renderDescription()}
                   </div>
                   <div className="comment">
-                    <h6>Comment</h6>
+                    {editComment
+                      ? <h6 className="mb-3">Edit comment</h6>
+                      : <h6 className="mb-3">Comment</h6>
+                    }
                     <div className="block-comment" style={{ display: 'flex' }}>
                       <div className="avatar">
                         <img src={require('../../../../assets/img/download (1).jfif')} alt="img1" />
                       </div>
                       <div className="input-comment" style={{ paddingRight: '25px' }}>
-                        {/* <input type="text" placeholder="Add a comment ..." /> */}
-                        <Editor
-                          name="comment"
-                          value={commentContent}
-                          init={{
-                            height: 150,
-                            menubar: false,
-                            plugins: [
-                              'advlist autolink lists link image charmap print preview anchor',
-                              'searchreplace visualblocks code fullscreen',
-                              'insertdatetime media table paste code help wordcount'
-                            ],
-                            toolbar: 'undo redo | formatselect | ' +
-                              'bold italic backcolor | alignleft aligncenter ' +
-                              'alignright alignjustify | bullist numlist outdent indent | ' +
-                              'removeformat | help',
-                          }}
-                          onEditorChange={handleCommentChange}
-                        />
-                        <p className="m-0">
-                          <span style={{ fontWeight: 500, color: 'gray' }}>Protip:</span>
-                          <span>press
-                            <span style={{ fontWeight: 'bold', background: '#ecedf0', color: '#b4bac6' }}>M</span>
-                            to comment</span>
-                        </p>
-                        <div className="text-right">
-                          <button className="btn btn-outline-primary mx-1 btn-sm" onClick={() => {
-                            let newComment = commentContent
-                            dispatch(actInsertComment({ taskId: taskDetailModal.taskId.toString(), contentComment: newComment }))
-                            dispatch(actGetTaskDetailSaga(taskDetailModal.taskId))
-                            setCommentContent('')
-                          }}>Save</button>
-                        </div>
+                        {editComment
+                          ?
+                          <div className="d-flex mb-3">
+                            <input
+                              value={historyComment.comment}
+                              onChange={(e) => {
+                                setHistoryComment({
+                                  ...historyComment,
+                                  comment: e.target.value
+                                });
+                              }}
+                              className="form-control mr-3"
+                              type="text"
+                              placeholder="Add a comment ..."
+                            />
+                            <button onClick={() => {
+                              // console.log(historyComment);
+                              dispatch(actUpdateComment(historyComment, taskDetailModal.taskId))
+                              setEditComment(false)
+                            }} className="btn btn-success mr-2">Save</button>
+                          </div>
+                          :
+                          <>
+                            <Editor
+                              name="comment"
+                              value={commentContent}
+                              init={{
+                                height: 150,
+                                menubar: false,
+                                plugins: [
+                                  'advlist autolink lists link image charmap print preview anchor',
+                                  'searchreplace visualblocks code fullscreen',
+                                  'insertdatetime media table paste code help wordcount'
+                                ],
+                                toolbar: 'undo redo | formatselect | ' +
+                                  'bold italic backcolor | alignleft aligncenter ' +
+                                  'alignright alignjustify | bullist numlist outdent indent | ' +
+                                  'removeformat | help',
+                              }}
+                              onEditorChange={handleCommentChange}
+                            />
+                            <p className="m-0">
+                              <span style={{ fontWeight: 500, color: 'gray' }}>Protip:</span>
+                              <span>press
+                                <span style={{ fontWeight: 'bold', background: '#ecedf0', color: '#b4bac6' }}>M</span>
+                                to comment</span>
+                            </p>
+                            <div className="text-right">
+                              <button className="btn btn-outline-primary mx-1 btn-sm" onClick={() => {
+                                let newComment = commentContent
+                                if (newComment.trim() === "") {
+                                  return;
+                                }
+                                dispatch(actInsertComment({ taskId: taskDetailModal.taskId.toString(), contentComment: newComment }))
+                                setCommentContent('')
+                              }}>Save</button>
+                            </div>
+                          </>
+                        }
                       </div>
                     </div>
                     <div className="lastest-comment">
@@ -203,12 +236,44 @@ export default function Modal(props) {
                                   <span className="font-weight-bold">{item.name}</span> <span>a month ago</span>
                                 </p>
                                 <p style={{ marginBottom: 5 }}>
-                                  {item.commentContent}
+                                  {ReactHtmlParser(item.commentContent).props.children}
                                 </p>
                                 <div>
-                                  <span className="text-info mx-1" style={{ cursor: 'pointer' }}>Edit</span>
+                                  <span
+                                    onClick={(e) => {
+                                      setEditComment(true)
+                                      setHistoryComment({
+                                        ...historyComment,
+                                        comment: ReactHtmlParser(item.commentContent).props.children,
+                                        taskId: item.id
+                                      })
+                                    }}
+                                    className="text-info mr-1"
+                                    style={{ cursor: 'pointer' }}
+                                  >Edit</span>
                                   •
-                                  <span className="text-danger mx-1" style={{ cursor: 'pointer' }}>Delete</span>
+                                  {editComment
+                                    ?
+                                    <span
+                                      onClick={() => {
+                                        setEditComment(false)
+                                      }}
+                                      className="text-secondary mx-1"
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      Cancel
+                                    </span>
+                                    :
+                                    <span
+                                      onClick={() => {
+                                        dispatch(actDeleteComment(item.id, taskDetailModal.taskId))
+                                      }}
+                                      className="text-danger mx-1"
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      Delete
+                                    </span>
+                                  }
                                 </div>
                               </div>
                             </div>
@@ -242,7 +307,6 @@ export default function Modal(props) {
                               <p className="name">
                                 {member.name}
                                 <i className="fa fa-times" style={{ marginLeft: 5, cursor: 'pointer' }} onClick={() => {
-                                  // dispatch(actRemoveUserAssignee(member.id))
                                   dispatch(actUpdateTaskModalSaga(REMOVE_USER_ASSIGNEE, member.id))
                                 }} />
                               </p>

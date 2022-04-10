@@ -23,9 +23,9 @@ function CreateProject(props) {
     }
   }, [dispatch])
   return (
-    <div className="container m-5">
+    <div className="container-fluid mx-3 my-5">
       <h3>Create Project</h3>
-      <form className="container" onSubmit={handleSubmit} onChange={handleChange}>
+      <form className="container-fluid" onSubmit={handleSubmit} onChange={handleChange}>
 
         <div className="form-group">
           <label htmlFor="projectName">Project name</label>
