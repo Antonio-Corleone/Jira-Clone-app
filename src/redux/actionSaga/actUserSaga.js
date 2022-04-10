@@ -104,7 +104,6 @@ function* getUserProject(action) {
 
   }
   catch (err) {
-    console.log(err.response?.data);
     yield put(actGetUserByProjectId([]));
   }
 }

@@ -14,7 +14,6 @@ import {
   GET_TASK_STATUS_SAGA,
   GET_TASK_DETAIL_SAGA,
   EDIT_TASK_MODAL_SAGA,
-  EDIT_TASK_MODAL,
   REMOVE_USER_ASSIGNEE,
   UPDATE_TASK_STATUS_SAGA
 } from '../constants';
@@ -74,7 +73,7 @@ function* createNewTask(action) {
   yield put(actShowLoading());
   yield delay(500)
   try {
-    const { data } = yield call(() => jiraService.createNewTaskApi(action.payload));
+    yield call(() => jiraService.createNewTaskApi(action.payload));
     yield put(actCloseModal())
     notiFunction('success', 'Create new task successfully!')
     yield delay(500)

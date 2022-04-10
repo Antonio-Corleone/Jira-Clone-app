@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import ReactHtmlParser from 'html-react-parser';
 import { Editor } from '@tinymce/tinymce-react'
 import {
-  actEditTaskModal,
+  actGetTaskDetailSaga,
   actGetTaskPrioritySaga,
   actGetTaskStatusSaga,
   actGetTaskTypeSaga,
-  actRemoveUserAssignee,
   actUpdateTaskModalSaga
 } from '../../../../redux/actions/actTasks';
 import { EDIT_TASK_MODAL, REMOVE_USER_ASSIGNEE } from '../../../../redux/constants';
+import { actInsertComment } from '../../../../redux/actions/actComment';
 
 
 export default function Modal(props) {
@@ -22,11 +22,12 @@ export default function Modal(props) {
 
   const [openEditor, setOpenEditor] = useState(false);
   const [editorContent, setEditorContent] = useState(taskDetailModal.description)
+  const [commentContent, setCommentContent] = useState('')
   useEffect(() => {
     dispatch(actGetTaskPrioritySaga());
     dispatch(actGetTaskStatusSaga());
     dispatch(actGetTaskTypeSaga());
-  }, [])
+  }, [dispatch])
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch(actUpdateTaskModalSaga(EDIT_TASK_MODAL, { name, value }))
@@ -35,6 +36,9 @@ export default function Modal(props) {
   const handleEditorChange = (content, editor) => {
     setEditorContent(content)
     // setFieldValue('description', content);
+  }
+  const handleCommentChange = (content, editor) => {
+    setCommentContent(content)
   }
   const renderDescription = () => {
     let description = taskDetailModal.description && ReactHtmlParser(taskDetailModal.description);
@@ -150,40 +154,67 @@ export default function Modal(props) {
                       <div className="avatar">
                         <img src={require('../../../../assets/img/download (1).jfif')} alt="img1" />
                       </div>
-                      <div className="input-comment">
-                        <input type="text" placeholder="Add a comment ..." />
-                        <p>
+                      <div className="input-comment" style={{ paddingRight: '25px' }}>
+                        {/* <input type="text" placeholder="Add a comment ..." /> */}
+                        <Editor
+                          name="comment"
+                          value={commentContent}
+                          init={{
+                            height: 150,
+                            menubar: false,
+                            plugins: [
+                              'advlist autolink lists link image charmap print preview anchor',
+                              'searchreplace visualblocks code fullscreen',
+                              'insertdatetime media table paste code help wordcount'
+                            ],
+                            toolbar: 'undo redo | formatselect | ' +
+                              'bold italic backcolor | alignleft aligncenter ' +
+                              'alignright alignjustify | bullist numlist outdent indent | ' +
+                              'removeformat | help',
+                          }}
+                          onEditorChange={handleCommentChange}
+                        />
+                        <p className="m-0">
                           <span style={{ fontWeight: 500, color: 'gray' }}>Protip:</span>
                           <span>press
                             <span style={{ fontWeight: 'bold', background: '#ecedf0', color: '#b4bac6' }}>M</span>
                             to comment</span>
                         </p>
+                        <div className="text-right">
+                          <button className="btn btn-outline-primary mx-1 btn-sm" onClick={() => {
+                            let newComment = commentContent
+                            dispatch(actInsertComment({ taskId: taskDetailModal.taskId.toString(), contentComment: newComment }))
+                            dispatch(actGetTaskDetailSaga(taskDetailModal.taskId))
+                            setCommentContent('')
+                          }}>Save</button>
+                        </div>
                       </div>
                     </div>
                     <div className="lastest-comment">
-                      <div className="comment-item">
-                        <div className="display-comment" style={{ display: 'flex' }}>
-                          <div className="avatar">
-                            <img src={require('../../../../assets/img/download (1).jfif')} alt="img1" />
-                          </div>
-                          <div>
-                            <p style={{ marginBottom: 5 }}>
-                              Lord Gaben <span>a month ago</span>
-                            </p>
-                            <p style={{ marginBottom: 5 }}>
-                              Lorem ipsum dolor sit amet, consectetur
-                              adipisicing elit. Repellendus tempora ex
-                              voluptatum saepe ab officiis alias totam ad
-                              accusamus molestiae?
-                            </p>
-                            <div>
-                              <span style={{ color: '#929398' }}>Edit</span>
-                              •
-                              <span style={{ color: '#929398' }}>Delete</span>
+                      {taskDetailModal?.lstComment.map((item, index) => {
+                        return (
+                          <div className="comment-item" key={index}>
+                            <div className="display-comment" style={{ display: 'flex' }}>
+                              <div className="avatar">
+                                <img src={item.avatar} alt={item.name} />
+                              </div>
+                              <div>
+                                <p style={{ marginBottom: 5 }}>
+                                  <span className="font-weight-bold">{item.name}</span> <span>a month ago</span>
+                                </p>
+                                <p style={{ marginBottom: 5 }}>
+                                  {item.commentContent}
+                                </p>
+                                <div>
+                                  <span className="text-info mx-1" style={{ cursor: 'pointer' }}>Edit</span>
+                                  •
+                                  <span className="text-danger mx-1" style={{ cursor: 'pointer' }}>Delete</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
@@ -225,7 +256,7 @@ export default function Modal(props) {
                       <div>
                         <select value="" className="form-control ml-2" id="add-member" onChange={(e) => {
                           let { value } = e.target;
-                          let index = projectDetail.members?.findIndex(item => item.userId == value);
+                          let index = projectDetail.members?.findIndex(item => item.userId === value);
                           let userAssign = { ...projectDetail.members[index], id: Number(value) };
                           let newAssign = [...taskDetailModal.assigness, userAssign];
                           dispatch(actUpdateTaskModalSaga(EDIT_TASK_MODAL, { name: 'assigness', value: newAssign }))

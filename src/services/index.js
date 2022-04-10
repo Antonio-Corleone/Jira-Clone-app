@@ -3,7 +3,7 @@ import api from "../utils/apiUtils"
 export const jiraService = {
   signInService: (userLogin) => api
     .post('Users/signin', userLogin),
-
+  // Project services
   getAllProjectCategory: () => api
     .get('ProjectCategory'),
 
@@ -21,7 +21,7 @@ export const jiraService = {
 
   getProjectDetail: (id) => api
     .get(`Project/getProjectDetail?id=${id}`),
-
+  // User services
   getUserInfo: (keyword) => api
     .get(`Users/getUser?keyword=${keyword}`),
 
@@ -33,7 +33,7 @@ export const jiraService = {
 
   deleteMemberProject: (userProject) => api
     .post('Project/removeUserFromProject', userProject),
-
+  // Task services
   getTaskType: () => api
     .get('TaskType/getAll'),
 
@@ -54,4 +54,10 @@ export const jiraService = {
 
   updateTaskStatusApi: (taskStatus) => api
     .put('Project/updateStatus', taskStatus),
+  // Comment services
+  insertCommentApi: (newComment) => api
+    .post('Comment/insertComment', newComment),
+
+  getListCommentApi: (taskId) => api
+    .get(`Comment/getAll?taskId=${taskId}`)
 }

@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   projectReducer,
   userReducer,
   createTasksReducer,
-  tasksModalReducer
+  tasksModalReducer,
 });
 
 export default rootReducer;

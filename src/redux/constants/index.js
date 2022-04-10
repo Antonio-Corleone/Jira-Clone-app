@@ -48,3 +48,5 @@ export const EDIT_TASK_MODAL = '@taskModal/EDIT_TASK_MODAL';
 export const REMOVE_USER_ASSIGNEE = '@taskModal/REMOVE_USER_ASSIGNEE';
 export const EDIT_TASK_MODAL_SAGA = '@taskModal/EDIT_TASK_MODAL_SAGA';
 export const UPDATE_TASK_STATUS_SAGA = '@taskModal/UPDATE_TASK_STATUS_SAGA';
+// Comment handle
+export const INSERT_COMMENT_SAGA = '@taskModal/INSERT_COMMENT_SAGA';

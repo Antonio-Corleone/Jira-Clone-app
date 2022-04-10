@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Main from '../templates/HomeTemplate/_components/Main'
 
 export default function HomePage() {

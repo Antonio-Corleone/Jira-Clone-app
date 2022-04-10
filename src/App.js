@@ -2,7 +2,7 @@
 import React, { Suspense } from "react";
 import { useSelector } from 'react-redux';
 import './App.css';
-import { BrowserRouter, Route, Switch, Router } from "react-router-dom";
+import { Route, Switch, Router } from "react-router-dom";
 import { history } from "./utils/history"
 //import components
 import UserLoginComponent from './templates/UserLoginTemplate/index'

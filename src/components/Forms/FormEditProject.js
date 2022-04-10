@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux'
-import { Form, Col, Row, Input } from 'antd';
 import { withFormik } from 'formik'
 import * as Yup from 'yup';
 
@@ -13,15 +12,11 @@ function FormEditProject(props) {
 
   const {
     values,
-    touched,
-    errors,
     handleChange,
-    handleBlur,
     handleSubmit,
     setFieldValue,
   } = props;
 
-  const { callBackSubmit } = useSelector(state => state.modalPopUpRenderer);
   const arrProjectCategory = useSelector(state => state.createProjectReducer.arrProjectCategory);
   const dispatch = useDispatch();
   const handleEditorChange = (content, editor) => {

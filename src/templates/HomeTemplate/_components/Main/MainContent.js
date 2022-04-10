@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { actGetTaskDetailSaga, actGetTaskStatusSaga, actUpdateTaskStatusSaga } from '../../../../redux/actions/actTasks';
+import { actGetTaskDetailSaga, actUpdateTaskStatusSaga } from '../../../../redux/actions/actTasks';
 
 export default function MainContent(props) {
   const dispatch = useDispatch();
