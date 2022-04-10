@@ -15,7 +15,8 @@ import {
   GET_TASK_DETAIL_SAGA,
   EDIT_TASK_MODAL_SAGA,
   EDIT_TASK_MODAL,
-  REMOVE_USER_ASSIGNEE
+  REMOVE_USER_ASSIGNEE,
+  UPDATE_TASK_STATUS_SAGA
 } from '../constants';
 import { actGetProjectDetailSaga } from '../actions/actProject';
 
@@ -114,7 +115,7 @@ function* updateTaskModal(action) {
   try {
     if (action.actionType === REMOVE_USER_ASSIGNEE) {
       yield put(actRemoveUserAssignee(action.payload))
-    }else{
+    } else {
       yield put(actEditTaskModal(action.payload))
     }
 
@@ -122,7 +123,7 @@ function* updateTaskModal(action) {
     const listUserAsign = taskDetailModal.assigness?.map(item => {
       return item.id
     })
-    const updateTask = {...taskDetailModal,listUserAsign}
+    const updateTask = { ...taskDetailModal, listUserAsign }
 
     yield call(() => jiraService.editTaskModalApi(updateTask));
     yield put(actGetProjectDetailSaga(taskDetailModal.projectId))
@@ -135,4 +136,19 @@ function* updateTaskModal(action) {
 
 export function* UpdateTaskModalRequest() {
   yield takeLatest(EDIT_TASK_MODAL_SAGA, updateTaskModal)
+}
+// Update task status
+function* updateTaskStatus(action) {
+  // Call api
+  try {
+    yield call(() => jiraService.updateTaskStatusApi(action.payload));
+    yield put(actGetProjectDetailSaga(action.projectId))
+  }
+  catch (err) {
+    console.log(err.response?.data);
+  }
+}
+
+export function* UpdateTaskStatusRequest() {
+  yield takeLatest(UPDATE_TASK_STATUS_SAGA, updateTaskStatus)
 }

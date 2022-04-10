@@ -56,3 +56,9 @@ export const actUpdateTaskModalSaga = (actType,taskEdit) => ({
   actionType:actType,
   payload: taskEdit
 })
+
+export const actUpdateTaskStatusSaga = (taskStatus,projectId) => ({
+  type: actTasks.UPDATE_TASK_STATUS_SAGA,
+  payload: taskStatus,
+  projectId
+})

@@ -50,5 +50,8 @@ export const jiraService = {
     .get(`Project/getTaskDetail?taskId=${taskId}`),
 
   editTaskModalApi: (taskEdit) => api
-    .post('Project/updateTask', taskEdit)
+    .post('Project/updateTask', taskEdit),
+
+  updateTaskStatusApi: (taskStatus) => api
+    .put('Project/updateStatus', taskStatus),
 }

@@ -25,6 +25,7 @@ function* rootSaga() {
     actTaskSaga.CreateNewTaskRequest(),
     actTaskSaga.GetTaskDetailRequest(),
     actTaskSaga.UpdateTaskModalRequest(),
+    actTaskSaga.UpdateTaskStatusRequest(),
   ])
 }
 export default rootSaga;
